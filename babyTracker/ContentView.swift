@@ -12,17 +12,21 @@ struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
 
     @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
+        sortDescriptors: [NSSortDescriptor(keyPath: \LogEntry.type, ascending: true)],
         animation: .default)
-    private var items: FetchedResults<Item>
-
+    private var items: FetchedResults<LogEntry>
+    
+    @State private var showEntry = false
+    
     var body: some View {
-        NavigationView {
+        NavigationStack {
             List {
                 ForEach(items) { item in
                     NavigationLink {
+                        Text("Item is \(item.type!)")
                         Text("Item at \(item.timestamp!, formatter: itemFormatter)")
                     } label: {
+                        Text(item.type!)
                         Text(item.timestamp!, formatter: itemFormatter)
                     }
                 }
@@ -33,28 +37,23 @@ struct ContentView: View {
                     EditButton()
                 }
                 ToolbarItem {
-                    Button(action: addItem) {
+                    Button(action: {showEntry.toggle()}) {
                         Label("Add Item", systemImage: "plus")
                     }
                 }
             }
             Text("Select an item")
+            
+            .navigationTitle("Home")
+        }
+        .sheet(isPresented: $showEntry, onDismiss: {showEntry = false}) {
+            AddLogEntryView(isEntry: $showEntry)
+                .environment(\.managedObjectContext, viewContext)
         }
     }
-
+    
     private func addItem() {
         withAnimation {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
-
-            do {
-                try viewContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
         }
     }
 

@@ -15,7 +15,7 @@ struct PersistenceController {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
         for _ in 0..<10 {
-            let newItem = Item(context: viewContext)
+            let newItem = LogEntry(context: viewContext)
             newItem.timestamp = Date()
         }
         do {
@@ -49,8 +49,10 @@ struct PersistenceController {
                  * The store could not be migrated to the current model version.
                  Check the error message to determine what the actual problem was.
                  */
-                fatalError("Unresolved error \(error), \(error.userInfo)")
-            }
+                print("❌ Failed to load store: \(error), \(error.userInfo)")
+                } else {
+                    print("✅ Store loaded: \(storeDescription)")
+                }
         })
         container.viewContext.automaticallyMergesChangesFromParent = true
     }
