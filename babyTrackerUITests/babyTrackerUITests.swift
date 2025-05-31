@@ -9,17 +9,17 @@ import XCTest
 
 final class babyTrackerUITests: XCTestCase {
     let app = XCUIApplication()
-
+    
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
-
+        
         // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
-
+        
         // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
         XCUIApplication().launch()
     }
-
+    
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
@@ -29,17 +29,47 @@ final class babyTrackerUITests: XCTestCase {
     }
     
     func testHomeDisplaysLastSleepEntry() throws {
-        XCTAssertTrue(app.staticTexts["Sleeping"].exists)
+        XCTAssertTrue(app.buttons["Sleeping"].exists)
     }
     
     func testHomeDisplaysLastFeedEntry() throws {
-        XCTAssertTrue(app.staticTexts["Feeding"].exists)
+        XCTAssertTrue(app.buttons["Feeding"].exists)
     }
     
     func testHomeDisplaysLastDiaperEntry() throws {
-        XCTAssertTrue(app.staticTexts["Diapers"].exists)
+        XCTAssertTrue(app.buttons["Diapers"].exists)
+    }
+    
+    func testTappingSleepNavigatesToSleepLog() throws {
+        app.buttons["Sleeping"].tap()
+        XCTAssertTrue(app.staticTexts["Sleep Log"].exists)
     }
 
+    func testTappingFeedNavigatesToFeedLog() throws {
+        app.buttons["Feeding"].tap()
+        XCTAssertTrue(app.staticTexts["Feed Log"].exists)
+    }
+    
+    func testTappingDiapersNavigatesToDiaperLog() throws {
+        app.buttons["Diapers"].tap()
+        XCTAssertTrue(app.staticTexts["Diaper Log"].exists)
+    }
+    
+    func testTappingSleepShowsSleepLogData() throws {
+        app.buttons["Sleeping"].tap()
+        XCTAssertTrue(app.staticTexts["Duration:"].exists)
+    }
+    
+    func testTappingFeedShowsFeedLogData() throws {
+        app.buttons["Feeding"].tap()
+        XCTAssertTrue(app.staticTexts["Amount:"].exists)
+    }
+    
+    func testTappingDiapersShowsDiaperLogData() throws {
+        app.buttons["Diapers"].tap()
+        XCTAssertTrue(app.staticTexts["Mixed"].exists)
+    }
+    
     @MainActor
     func testExample() throws {
         // UI tests must launch the application that they test.
