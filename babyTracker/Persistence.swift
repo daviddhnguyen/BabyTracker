@@ -14,9 +14,30 @@ struct PersistenceController {
     static let preview: PersistenceController = {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
-        for _ in 0..<10 {
-            let newItem = LogEntry(context: viewContext)
-            newItem.timestamp = Date()
+        let types = ["Sleep", "Feed", "Diaper", "test"]
+        let diaperOptions = ["Wet", "Dirty", "Mixed"]
+        let bottleOptions = ["Breast Milk", "Formula"]
+        
+        for type in types {
+            for _ in 0..<10 {
+                let newItem = LogEntry(context: viewContext)
+                
+                if let randomDiaper = diaperOptions.randomElement() {
+                    newItem.diaperType = randomDiaper
+                }
+                
+                if let randomBottle = bottleOptions.randomElement() {
+                    newItem.bottleType = randomBottle
+                }
+                newItem.type = type
+                newItem.duration = Double.random(in: 1...100)
+                newItem.amount = Double.random(in: 1...100)
+            
+                //Random date in last 30 days
+                let randomDaysAgo = Int.random(in: 0..<30)
+                let randomDate = Date().addingTimeInterval(-Double(randomDaysAgo) * 86400)
+                newItem.timestamp = randomDate
+            }
         }
         do {
             try viewContext.save()

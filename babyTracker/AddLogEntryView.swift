@@ -19,6 +19,7 @@ struct AddLogEntryView: View {
     @State var diaperType: String = ""
     @State var amount: Double = 0
     @State var bottleType: String = ""
+    @State var duration: Double = 0
     
     var body: some View {
         NavigationStack {
@@ -48,7 +49,7 @@ struct AddLogEntryView: View {
                     
                     switch type {
                     case "Sleep":
-                        Text("sleep")
+                        Text("Sleep")
                         
                     case "Feed":
                         Text("Bottle Type")
@@ -69,6 +70,11 @@ struct AddLogEntryView: View {
                         Button("Submit") {
                             let newItem = LogEntry(context: viewContext)
                             newItem.type = type
+                            newItem.bottleType = bottleType
+                            newItem.diaperType = diaperType
+                            newItem.duration = duration
+                            newItem.amount = amount
+                            newItem.notes = notes
                             newItem.timestamp = Date()
                             
                             do {

@@ -57,17 +57,18 @@ final class babyTrackerUITests: XCTestCase {
     
     func testTappingSleepShowsSleepLogData() throws {
         app.buttons["Sleeping"].tap()
-        XCTAssertTrue(app.staticTexts["Duration:"].exists)
+        XCTAssertTrue(app.staticTexts["durationLabel"].exists)
     }
     
     func testTappingFeedShowsFeedLogData() throws {
         app.buttons["Feeding"].tap()
-        XCTAssertTrue(app.staticTexts["Amount:"].exists)
+        XCTAssertTrue(app.staticTexts["bottleTypeLabel"].exists)
+        XCTAssertTrue(app.staticTexts["amountLabel"].exists)
     }
     
     func testTappingDiapersShowsDiaperLogData() throws {
         app.buttons["Diapers"].tap()
-        XCTAssertTrue(app.staticTexts["Mixed"].exists)
+        XCTAssertTrue(app.staticTexts["diaperTypeLabel"].exists)
     }
     
     @MainActor

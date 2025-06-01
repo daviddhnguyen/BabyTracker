@@ -13,23 +13,21 @@ struct LogView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
     @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \LogEntry.type, ascending: true)],
+        sortDescriptors: [NSSortDescriptor(keyPath: \LogEntry.timestamp, ascending: false)],
         animation: .default)
     private var items: FetchedResults<LogEntry>
     
     var body: some View {
         NavigationStack {
-            List {
-                ForEach(items.filter {$0.type == logType}) { item in
-                    NavigationLink {
-                        Text("Item is \(item.type!)")
-                        Text("Item at \(item.timestamp!, formatter: itemFormatter)")
-                    } label: {
-                        Text(item.type!)
-                        Text(item.timestamp!, formatter: itemFormatter)
+                List {
+                    ForEach(items.filter {$0.type == logType}) { item in
+                        NavigationLink {
+                            entryDetail(for: item)
+                        } label: {
+                            entryLabel(for: item)
+                        }
                     }
-                }
-                .onDelete(perform: deleteItems)
+                    .onDelete(perform: deleteItems)
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -38,6 +36,40 @@ struct LogView: View {
             }
             .navigationTitle("\(logType) Log")
         }
+    }
+    
+    @ViewBuilder
+    func entryLabel(for item: LogEntry) -> some View {
+        switch logType {
+        case "Sleep":
+            Text("Duration: \(item.duration, specifier: "%.1f") minutes")
+                .accessibilityIdentifier("durationLabel")
+            
+        case "Feed":
+            VStack(alignment: .leading) {
+                Text("Bottle: \(item.bottleType ?? "")")
+                    .accessibilityIdentifier("bottleTypeLabel")
+                Text("Amount: \(item.amount, specifier: "%.1f") fl oz")
+                    .accessibilityIdentifier("amountLabel")
+            }
+            
+        case "Diaper":
+            Text("Diaper Type: \(item.diaperType ?? "")")
+                .accessibilityIdentifier("diaperTypeLabel")
+            
+        default:
+            Text("Unknown Entry")
+            
+        }
+        Text(item.timestamp!, formatter: itemFormatter)
+    }
+    
+    @ViewBuilder
+    func entryDetail(for item: LogEntry) -> some View {
+        VStack(alignment: .leading) {
+            entryLabel(for: item)
+        }
+        .padding()
     }
     
     private func deleteItems(offsets: IndexSet) {
@@ -60,10 +92,10 @@ struct LogView: View {
 private let itemFormatter: DateFormatter = {
     let formatter = DateFormatter()
     formatter.dateStyle = .short
-    formatter.timeStyle = .medium
+    formatter.timeStyle = .short
     return formatter
 }()
 
 #Preview {
-    LogView(logType: "test").environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+    LogView(logType: "Sleep").environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
 }

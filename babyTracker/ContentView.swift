@@ -22,17 +22,18 @@ struct ContentView: View {
                     NavigationLink(destination: LogView(logType: "Sleep")) {
                         Text("Sleeping")
                     }
+                    .padding()
                     NavigationLink(destination: LogView(logType: "Feed")) {
                         Text("Feeding")
                     }
+                    .padding()
                     NavigationLink(destination: LogView(logType: "Diaper")) {
                         Text("Diapers")
                     }
+                    .padding()
                 }
+                .font(.title)
                 .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        EditButton()
-                    }
                     ToolbarItem {
                         Button(action: {showEntry.toggle()}) {
                             Label("Add Item", systemImage: "plus")
@@ -42,7 +43,6 @@ struct ContentView: View {
                 .foregroundStyle(Color.black)
                 .navigationTitle("Home")
             }
-            
             Text("Select an item")
         }
         .sheet(isPresented: $showEntry, onDismiss: {showEntry = false}) {
