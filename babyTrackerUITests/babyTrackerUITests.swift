@@ -24,6 +24,10 @@ final class babyTrackerUITests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
     
+    //Prints out the heirachy to identify the elements in the console
+    //print(app.debugDescription)
+    
+    //Test homescreen loads
     func testHomePageTitle() throws {
         XCTAssertTrue(app.staticTexts["Home"].exists)
     }
@@ -40,6 +44,7 @@ final class babyTrackerUITests: XCTestCase {
         XCTAssertTrue(app.buttons["Diapers"].exists)
     }
     
+    //Test going to Log Page
     func testTappingSleepNavigatesToSleepLog() throws {
         app.buttons["Sleeping"].tap()
         XCTAssertTrue(app.staticTexts["Sleep Log"].exists)
@@ -55,6 +60,7 @@ final class babyTrackerUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Diaper Log"].exists)
     }
     
+    //Test showing correct Log Data
     func testTappingSleepShowsSleepLogData() throws {
         app.buttons["Sleeping"].tap()
         XCTAssertTrue(app.staticTexts["durationLabel"].exists)
@@ -70,6 +76,69 @@ final class babyTrackerUITests: XCTestCase {
         app.buttons["Diapers"].tap()
         XCTAssertTrue(app.staticTexts["diaperTypeLabel"].exists)
     }
+    
+    //Test navigating to log data details page
+    func testNavigateToDataDetailPageSleep() throws {
+        app.buttons["Sleeping"].tap()
+        
+        let items = app.buttons.matching(identifier: "durationLabel")
+        print(app.debugDescription)
+        XCTAssertTrue(items.count > 0)
+        
+        let firstCell = items.firstMatch
+        XCTAssertTrue(firstCell.exists)
+        firstCell.tap()
+        
+        XCTAssertTrue(app.staticTexts["durationLabel"].exists)
+    }
+    
+    func testNavigateToDataDetailPageFeed() throws {
+        app.buttons["Feeding"].tap()
+        
+        let items = app.buttons.matching(identifier: "bottleTypeLabel-amountLabel")
+        //print(app.debugDescription)
+        XCTAssertTrue(items.count > 0)
+        
+        let firstCell = items.firstMatch
+        XCTAssertTrue(firstCell.exists)
+        firstCell.tap()
+        
+        XCTAssertTrue(app.staticTexts["bottleTypeLabel"].exists)
+    }
+    
+    func testNavigateToDataDetailPageDiaper() throws {
+        app.buttons["Diapers"].tap()
+        
+        let items = app.buttons.matching(identifier: "diaperTypeLabel")
+        print(app.debugDescription)
+        XCTAssertTrue(items.count > 0)
+        
+        let firstCell = items.firstMatch
+        XCTAssertTrue(firstCell.exists)
+        firstCell.tap()
+        
+        XCTAssertTrue(app.staticTexts["diaperTypeLabel"].exists)
+    }
+    
+    //Test to edit log data details page
+    func testEditDataDetailPageSleep() throws {
+        app.buttons["Sleeping"].tap()
+        
+        let items = app.buttons.matching(identifier: "durationLabel")
+        let firstCell = items.firstMatch
+        firstCell.tap()
+        
+        XCTAssertTrue(app.buttons["edit"].exists)
+    
+    //Test to delete log data detail
+    
+    //Test to navigate to add new entry page
+    
+    //Test to add new sleep entry + verify it was added to homepage
+    
+    //Test to add new feed entry + verify it was added to homepage
+    
+    //Test to add new diaper entry + verify it was added to homepage
     
     @MainActor
     func testExample() throws {

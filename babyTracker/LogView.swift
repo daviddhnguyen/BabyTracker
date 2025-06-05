@@ -29,6 +29,7 @@ struct LogView: View {
                     }
                     .onDelete(perform: deleteItems)
             }
+                //.listStyle(.plain)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     EditButton()
@@ -59,9 +60,11 @@ struct LogView: View {
             
         default:
             Text("Unknown Entry")
+                .accessibilityIdentifier("unknownLabel")
             
         }
         Text(item.timestamp!, formatter: itemFormatter)
+            //.accessibilityIdentifier("dateLabel")
     }
     
     @ViewBuilder
