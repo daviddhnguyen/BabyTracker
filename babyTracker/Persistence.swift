@@ -22,6 +22,11 @@ struct PersistenceController {
             for _ in 0..<10 {
                 let newItem = LogEntry(context: viewContext)
                 
+                //Random date in last 30 days
+                let randomDaysAgo = Int.random(in: 0..<30)
+                let randomDate = Date().addingTimeInterval(-Double(randomDaysAgo) * 86400)
+                newItem.timestamp = randomDate
+                
                 if let randomDiaper = diaperOptions.randomElement() {
                     newItem.diaperType = randomDiaper
                 }
@@ -30,13 +35,12 @@ struct PersistenceController {
                     newItem.bottleType = randomBottle
                 }
                 newItem.type = type
-                newItem.duration = Double.random(in: 1...100)
+                newItem.startSleepTime = randomDate
+                let end = randomDate.addingTimeInterval(Double.random(in: 1...6000))
+                newItem.endSleepTime = end
+                newItem.duration = end.timeIntervalSince(randomDate) / 60.0
                 newItem.amount = Double.random(in: 1...100)
-            
-                //Random date in last 30 days
-                let randomDaysAgo = Int.random(in: 0..<30)
-                let randomDate = Date().addingTimeInterval(-Double(randomDaysAgo) * 86400)
-                newItem.timestamp = randomDate
+
             }
         }
         do {

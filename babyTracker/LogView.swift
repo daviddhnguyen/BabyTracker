@@ -6,23 +6,33 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct LogView: View {
     var logType: String
     
+    //@ObservedObject var entry: LogEntry
     @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.dismiss) private var dismiss
     
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \LogEntry.timestamp, ascending: false)],
         animation: .default)
     private var items: FetchedResults<LogEntry>
     
+    @State private var startSleepTime: Date = Date()
+    @State private var endSleepTime: Date = Date()
+    
+    var duration: Double {
+        endSleepTime.timeIntervalSince(startSleepTime) / 60.0
+    }
+    
     var body: some View {
         NavigationStack {
                 List {
                     ForEach(items.filter {$0.type == logType}) { item in
                         NavigationLink {
-                            entryDetail(for: item)
+                            EntryDetailView(item: item, logType: logType)
                         } label: {
                             entryLabel(for: item)
                         }
@@ -64,17 +74,67 @@ struct LogView: View {
             
         }
         Text(item.timestamp!, formatter: itemFormatter)
-            //.accessibilityIdentifier("dateLabel")
     }
-    
+    /*
     @ViewBuilder
     func entryDetail(for item: LogEntry) -> some View {
-        VStack(alignment: .leading) {
-            entryLabel(for: item)
+        VStack {
+            switch logType {
+            case "Sleep":
+                VStack {
+                    Form {
+                        DatePicker("Start Time", selection: $startSleepTime, displayedComponents: [.date, .hourAndMinute])
+                            .onChange(of: startSleepTime) { oldStart, newStart in
+                                if endSleepTime < newStart {
+                                    endSleepTime = newStart
+                                }
+                            }
+                        
+                        DatePicker("End Time", selection: $endSleepTime, in: startSleepTime..., displayedComponents: [.date, .hourAndMinute])
+                        
+                        Text(String(format: "Duration: %.1f minutes", duration))
+                            .accessibilityLabel("durationLabel")
+                    }
+                    .onAppear {
+                        startSleepTime = item.startSleepTime ?? Date()
+                        endSleepTime = item.endSleepTime ?? Date()
+                    }
+                }
+                
+            case "Feed":
+                VStack(alignment: .leading) {
+                    Text("Bottle: \(item.bottleType ?? "")")
+                        .accessibilityIdentifier("bottleTypeLabel")
+                    Text("Amount: \(item.amount, specifier: "%.1f") fl oz")
+                        .accessibilityIdentifier("amountLabel")
+                }
+                
+            case "Diaper":
+                Text("Diaper Type: \(item.diaperType ?? "")")
+                    .accessibilityIdentifier("diaperTypeLabel")
+                
+            default:
+                Text("Unknown Entry")
+                    .accessibilityIdentifier("unknownLabel")
+                
+            }
+            HStack {
+                Button("Submit") {
+                    item.startSleepTime = startSleepTime
+                    item.endSleepTime = endSleepTime
+                    item.duration = duration
+                    try? viewContext.save()
+                    dismiss()
+                }
+                Button("Cancel") {
+                    dismiss()
+                }
+            }
+            .padding()
         }
-        .padding()
+        Text(item.timestamp!, formatter: itemFormatter)
     }
-    
+    */
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
             offsets.map { items[$0] }.forEach(viewContext.delete)

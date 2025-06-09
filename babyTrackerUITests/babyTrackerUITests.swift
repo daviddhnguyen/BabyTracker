@@ -110,7 +110,7 @@ final class babyTrackerUITests: XCTestCase {
         app.buttons["Diapers"].tap()
         
         let items = app.buttons.matching(identifier: "diaperTypeLabel")
-        print(app.debugDescription)
+        
         XCTAssertTrue(items.count > 0)
         
         let firstCell = items.firstMatch
@@ -128,7 +128,27 @@ final class babyTrackerUITests: XCTestCase {
         let firstCell = items.firstMatch
         firstCell.tap()
         
-        XCTAssertTrue(app.buttons["edit"].exists)
+        print(app.debugDescription)
+        XCTAssertTrue(app.staticTexts["Start Time"].exists)
+        XCTAssertTrue(app.staticTexts["End Time"].exists)
+        XCTAssertTrue(app.staticTexts["durationLabel"].exists)
+        XCTAssertTrue(app.buttons["Submit"].exists)
+        XCTAssertTrue(app.buttons["Cancel"].exists)
+    }
+    
+    func testEditDataDetailPageFeed() throws {
+        app.buttons["Feeding"].tap()
+        
+        let items = app.buttons.matching(identifier: "amountLabel")
+        let firstCell = items.firstMatch
+        firstCell.tap()
+        
+        print(app.debugDescription)
+        XCTAssertTrue(app.staticTexts["Bottle Type"].exists)
+        XCTAssertTrue(app.staticTexts["amountLabel"].exists)
+        XCTAssertTrue(app.buttons["Submit"].exists)
+        XCTAssertTrue(app.buttons["Cancel"].exists)
+    }
     
     //Test to delete log data detail
     
