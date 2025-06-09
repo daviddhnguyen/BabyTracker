@@ -160,5 +160,5 @@ private let itemFormatter: DateFormatter = {
 }()
 
 #Preview {
-    LogView(logType: "Sleep").environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+    LogView(logType: "Feed").environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
 }

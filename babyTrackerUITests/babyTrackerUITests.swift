@@ -139,7 +139,11 @@ final class babyTrackerUITests: XCTestCase {
     func testEditDataDetailPageFeed() throws {
         app.buttons["Feeding"].tap()
         
-        let items = app.buttons.matching(identifier: "amountLabel")
+        print(app.debugDescription)
+        XCTAssertTrue(app.staticTexts["bottleTypeLabel"].exists)
+        XCTAssertTrue(app.staticTexts["amountLabel"].exists)
+        
+        let items = app.buttons.matching(identifier: "bottleTypeLabel-amountLabel")
         let firstCell = items.firstMatch
         firstCell.tap()
         

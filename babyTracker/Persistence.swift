@@ -34,12 +34,13 @@ struct PersistenceController {
                 if let randomBottle = bottleOptions.randomElement() {
                     newItem.bottleType = randomBottle
                 }
+                
                 newItem.type = type
                 newItem.startSleepTime = randomDate
                 let end = randomDate.addingTimeInterval(Double.random(in: 1...6000))
                 newItem.endSleepTime = end
                 newItem.duration = end.timeIntervalSince(randomDate) / 60.0
-                newItem.amount = Double.random(in: 1...100)
+                newItem.amount = Double.random(in: 1...10)
 
             }
         }
